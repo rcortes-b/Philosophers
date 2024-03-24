@@ -12,25 +12,40 @@
 
 #include "../includes/philo.h"
 
-/*static void	*philo_routine(void *arg)
+//	printf("Hi.\n");
+
+static void	*philo_routine(void *arg)
 {
-	t_philo	*philo;
+	t_philo			*philo;
 
-	philo = (t_philo *)arg; //Con esto me he importado toda la estructura por cada philo
-}*/
-
-/* Si todo va correctamente, en esta funcion de abajo he asignado la direccion del mutex 0 al fork izquierdo del primero philo
-y mutex1 al fork derecho y asi sucesivamente.. *** Si es el ultimo philo le he dado la direccion de mutex0 al fork derecho ***/
-
-//static 
-
-static void	dining_philo(t_philo **philo, int num_of_philo)
-{
-//	pthread_t		*thread;
-
-//	philo = assign_forks(philo, fork_Mutex);
-
+	philo = (t_philo *)arg;
+	pthread_mutex_lock(philo->left_fork);
+	pthread_mutex_lock(philo->right_fork);
+	sleep(1);
+	printf("Se esta ejecutando el Philo %d\n", philo->philo_id);
+	sleep(1);
+	
+	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(philo->right_fork);
+	return (philo);
 }
+
+static void	dining_philo(t_philo **philo) //, int num_of_philo
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (philo[++i])
+		pthread_create(&philo[i]->thread, NULL, &philo_routine, philo[i]);
+	j = -1;
+	while (philo[++j])
+		pthread_join(philo[j]->thread, NULL);
+	i = -1;
+	while(philo[++i])
+		pthread_detach(philo[i]->thread);
+}
+
 
 int	main(int argc, char **argv)
 {
@@ -49,7 +64,7 @@ int	main(int argc, char **argv)
 			return (0);
 		if (!init_philo(philo, argc, &argv[2], num_of_philo))
 			return (0);
-		dining_philo(philo, num_of_philo);
+		dining_philo(philo);
 	
 		get_freed(philo);
 	}

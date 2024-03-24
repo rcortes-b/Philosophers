@@ -26,8 +26,11 @@ typedef struct s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				num_times_to_eat;
+	pthread_t		thread;
 	pthread_mutex_t	*left_fork; //if philo is 0, fork left is 4
 	pthread_mutex_t	*right_fork;
+	struct timeval	tv_start;
+	struct timeval	tv_end;
 }	t_philo;
 
 typedef struct s_parse
