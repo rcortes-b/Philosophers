@@ -21,13 +21,13 @@
 
 typedef struct s_philo
 {
-	int	philo_id;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	num_times_to_eat;
-	int	left_fork; //if philo is 0, fork left is 4
-	int	right_fork;
+	int				philo_id;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				num_times_to_eat;
+	pthread_mutex_t	*left_fork; //if philo is 0, fork left is 4
+	pthread_mutex_t	*right_fork;
 }	t_philo;
 
 typedef struct s_parse
@@ -46,6 +46,8 @@ int		check_input(char **argv);
 
 //Parser Utils
 int		ft_atoi(char *str);
-t_philo	**parse_args(t_philo **philo, int argc, char **argv);
+t_philo	**init_philo(t_philo **philo, int argc, char **argv, int num_of_philo);
 
 #endif
+
+//t_philo	**assign_forks(t_philo **philo, int num_of_philo);

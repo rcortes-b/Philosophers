@@ -31,9 +31,7 @@ int	ft_atoi(char *str)
 	return (num);
 }
 
-/* El primer philosopher tendra el left fork como 0 y el derecho como 1, el philo1 tendra el izquierdo como 1 y derecho como 2, asi hasta que el siguiente sea NULL, en ese caso el derecho sera el 0*/
-
-t_philo	**parse_args(t_philo **philo, int argc, char **argv)
+static t_philo	**parse_args(t_philo **philo, int argc, char **argv)
 {
 	t_parse	args;
 	int		i;
@@ -52,11 +50,49 @@ t_philo	**parse_args(t_philo **philo, int argc, char **argv)
 		philo[i]->time_to_sleep = args.time_to_sleep;
 		if (argc == 6)
 			philo[i]->num_times_to_eat = args.num_times_to_eat;
-		philo[i]->left_fork = i;
-		if (philo[i + 1])
-			philo[i]->right_fork = i + 1;
-		else
-			philo[i]->right_fork = 0;
 	}
+	return (philo);
+}
+
+static t_philo	**assign_forks(t_philo **philo, int num_of_philo)
+{
+	pthread_mutex_t	*mutex_fork;
+	int				i;
+
+	i = -1;
+	while (++i < num_of_philo)
+	{
+		mutex_fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+		if (!mutex_fork)
+			return (NULL);
+		if (i == 0)
+		{
+			philo[num_of_philo - 1]->right_fork = mutex_fork;
+			philo[i]->left_fork = mutex_fork;
+		}
+		else
+		{
+			philo[i - 1]->right_fork = mutex_fork;
+			philo[i]->left_fork = mutex_fork;
+		}
+	}
+	return (philo);
+}
+
+t_philo	**init_philo(t_philo **philo, int argc, char **argv, int num_of_philo)
+{
+	int	i;
+
+	i = -1;
+	while (++i < num_of_philo)
+	{
+		philo[i] = (t_philo *)malloc(sizeof(t_philo));
+		if (!philo[i])
+			return (get_freed(philo));
+	}
+	philo[i] = NULL;
+	philo = parse_args(philo, argc, argv);
+	if (!assign_forks(philo, num_of_philo))
+		return (get_freed(philo));
 	return (philo);
 }
