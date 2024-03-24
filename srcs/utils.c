@@ -12,6 +12,8 @@
 
 #include "../includes/philo.h"
 
+/* Checker && Error file */
+
 t_philo	**get_freed(t_philo **philo)
 {
 	int	i;
@@ -21,48 +23,6 @@ t_philo	**get_freed(t_philo **philo)
 		free(philo[i]);
 	free(philo);
 	return (NULL);
-}
-
-int	ft_atoi(char *str)
-{
-	int	i;
-	int	num;
-
-	i = 0;
-	num = 0;
-	while (str[i] == ' ' || str[i] == '\t')
-		i++;
-	if (str[i] == '+')
-		i++;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		num = num * 10 + (str[i] - '0');
-		i++;
-	}
-	return (num);
-}
-
-t_philo	**parse_args(t_philo **philo, int argc, char **argv)
-{
-	t_parse	args;
-	int		i;
-
-	args.time_to_die = ft_atoi(argv[0]);
-	args.time_to_eat = ft_atoi(argv[1]);
-	args.time_to_sleep = ft_atoi(argv[2]);
-	if (argc == 6)
-		args.num_times_to_eat = ft_atoi(argv[3]);
-	i = -1;
-	while (philo[++i])
-	{
-		philo[i]->philo_id = i + 1;
-		philo[i]->time_to_die = args.time_to_die;
-		philo[i]->time_to_eat = args.time_to_eat;
-		philo[i]->time_to_sleep = args.time_to_sleep;
-		if (argc == 6)
-			philo[i]->num_times_to_eat = args.num_times_to_eat;
-	}
-	return (philo);
 }
 
 int	check_input(char **argv)

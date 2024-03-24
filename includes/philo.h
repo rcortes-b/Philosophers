@@ -26,8 +26,8 @@ typedef struct s_philo
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	num_times_to_eat;
-	int	fork_left; //if philo is 0, fork left is 4
-	int	fork_right;
+	int	left_fork; //if philo is 0, fork left is 4
+	int	right_fork;
 }	t_philo;
 
 typedef struct s_parse
@@ -44,6 +44,7 @@ t_philo	**get_freed(t_philo **philo);
 void	invalid_input(int error_code);
 int		check_input(char **argv);
 
+//Parser Utils
 int		ft_atoi(char *str);
 t_philo	**parse_args(t_philo **philo, int argc, char **argv);
 

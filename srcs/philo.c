@@ -12,12 +12,21 @@
 
 #include "../includes/philo.h"
 
-static t_philo	**init_philo(t_philo **philo, int argc, char **argv)
+/* How routine will works */
+
+/* Como cojones puedo bloquear los forks ??? */
+
+static void	*philo_routine(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg; //Con esto me he importado toda la estructura por cada philo
+}
+
+static t_philo	**init_philo(t_philo **philo, int argc, char **argv, int num_of_philo)
 {
 	int	i;
-	int	num_of_philo;
 
-	num_of_philo = ft_atoi(argv[1]);
 	i = -1;
 	while (++i < num_of_philo)
 	{
@@ -26,18 +35,20 @@ static t_philo	**init_philo(t_philo **philo, int argc, char **argv)
 			return (get_freed(philo));
 	}
 	philo[i] = NULL;
-	philo = parse_args(philo, argc, &argv[2]);
+	philo = parse_args(philo, argc, argv);
 	return (philo);
 }
 
-/*void	*thread_routine(void *arg)
+static void	dining_philo(t_philo **philo, int num_of_philo)
 {
-	
-}*/
+	pthread_t		thread[num_of_philo];
+	pthread_mutex_t	forkMutex[num_of_philo]; //No se si hace falta tantos mutes, pero si quizas declarar unos forks
+}
 
 int	main(int argc, char **argv)
 {
 	t_philo	**philo;
+	int		num_of_philo;
 
 	if (argc < 5 || argc > 6)
 		invalid_input(1);
@@ -45,12 +56,13 @@ int	main(int argc, char **argv)
 		invalid_input(2);
 	else
 	{
-		philo = (t_philo **)malloc(sizeof(t_philo *) * ft_atoi(argv[1]));
+		num_of_philo = ft_atoi(argv[1]);
+		philo = (t_philo **)malloc(sizeof(t_philo *) * num_of_philo);
 		if (!philo)
 			return (0);
-		if (!init_philo(philo, argc, argv))
+		if (!init_philo(philo, argc, &argv[2], num_of_philo))
 			return (0);
-		
+		dining_philo(philo, num_of_philo);
 		
 		
 		get_freed(philo);

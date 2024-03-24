@@ -1,0 +1,5 @@
+.DS_Store
+.vscode
+philo
+*.o
+#notes.md
