@@ -17,8 +17,10 @@ https://medium.com/science-journal/the-dining-philosophers-problem-fded861c37ed
 
 Path que tengo que hacer:
 							- Mutear las direcciones de right fork / left fork mientras come un filosofo
-							- El tiempo que tarda en comer / dormir/ pensar y controlar cuando muere
+							- El tiempo que tarda en comer / dormir / pensar y controlar cuando muere
 							** Check bien el funcionamiento de gettimeofday , struct timeval
 							** Check el orden de lock, unlock con todo el tema del time, eat, sleep, repeat :)
 							- Check el optional de minimum time to eat :)
 							****** Se me han ejecutado los Philos en orden aun y lockeando el mutex e los forks, checkar bien eso. *Dunno if it should work like that
+
+MAYBE HACER un USLEEP MIENTRAS DUERME, COME, ETC. .... PERO DONDE???

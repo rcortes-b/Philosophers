@@ -40,10 +40,22 @@ static void	dining_philo(t_philo **philo) //, int num_of_philo
 		pthread_create(&philo[i]->thread, NULL, &philo_routine, philo[i]);
 	j = -1;
 	while (philo[++j])
+	{
+		pthread_mutex_init(philo[j]->left_fork, NULL);
+		pthread_mutex_init(philo[j]->right_fork, NULL);
+	}
+	j = -1;
+	while (philo[++j])
 		pthread_join(philo[j]->thread, NULL);
 	i = -1;
 	while(philo[++i])
 		pthread_detach(philo[i]->thread);
+	j = -1;
+	while (philo[++j])
+	{
+		pthread_mutex_destroy(philo[j]->left_fork);
+		pthread_mutex_destroy(philo[j]->right_fork);
+	}
 }
 
 
