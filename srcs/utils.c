@@ -12,20 +12,28 @@
 
 #include "../includes/philo.h"
 
-/* Checker && Error file */
-
-t_philo	**get_freed(t_philo **philo)
+int	ft_atoi(char *str)
 {
 	int	i;
+	int	num;
 
-	i = -1;
-	while (philo[++i])
-		free(philo[i]);
-	free(philo);
-	return (NULL);
+	i = 0;
+	num = 0;
+	while (str[i] == ' ' || str[i] == '\t')
+		i++;
+	if (str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		num = num * 10 + (str[i] - '0');
+		i++;
+	}
+	return (num);
 }
 
-int	check_input(char **argv)
+/* Checker && Error file */
+
+bool	check_input(char **argv)
 {
 	int	i;
 	int	j;
@@ -37,19 +45,20 @@ int	check_input(char **argv)
 		while (argv[i][++j])
 		{
 			if (argv[i][j] != '+' && (argv[i][j] < '0' || argv[i][j] > '9'))
-				return (1);
+				return (false);
 		}
 	}
-	return (0);
+	return (true);
 }
 
 void	invalid_input(int error_code)
 {
+	write(2, "philo error: ", 13);
 	if (error_code == 1)
-		printf("Invalid number of arguments\n");
+		write(2, "Invalid number of arguments\n", 28);
 	else if (error_code == 2)
-		printf("Invalid input. It contains more than just numbers\n");
-	printf("./pipex <number_of_philosophers> <time_to_die> <time_to_eat> ");
-	printf("<time_to_sleep> ");
-	printf("<(optional)number_of_times_each_philosopher_must_eat(optional)>\n");
+		write(2, "Invalid input. It contains more than just numbers\n", 50);
+	write(2, "./pipex <number_of_philosophers> <time_to_die> <time_to_eat> ", 61);
+	write(2, "<time_to_sleep> ", 16);
+	write(2, "<(optional)number_of_times_each_philosopher_must_eat(optional)>\n", 64);
 }
