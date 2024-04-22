@@ -1,5 +1,6 @@
 .DS_Store
 .vscode
+philo/philo
 *.o
 a.out
 main.c

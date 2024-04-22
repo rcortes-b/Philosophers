@@ -29,6 +29,23 @@ static bool	times_eaten(t_philo *philo, int num_of_philo)
 	return (true);
 }
 
+static bool	init_threads(t_philo *philo, int num_of_philos)
+{
+	int	i;
+
+	i = -1;
+	while (++i < num_of_philos)
+	{
+		if (pthread_create(&philo[i].thrd, NULL, &phil_routine, &philo[i]) != 0)
+		{
+			i = -1;
+			destroy_mutexes(philo, num_of_philos, 0);
+			return (false);
+		}
+	}
+	return (true);
+}
+
 static bool	monitorize_threads(t_philo *philo, int num_of_philo, int argc)
 {
 	int	i;
@@ -38,6 +55,8 @@ static bool	monitorize_threads(t_philo *philo, int num_of_philo, int argc)
 	i = -1;
 	while (++i < num_of_philo)
 		philo[i].is_dead = &is_dead;
+	if (!init_threads(philo, num_of_philo))
+		return (false);
 	i = -1;
 	while (++i < num_of_philo)
 	{
@@ -50,9 +69,9 @@ static bool	monitorize_threads(t_philo *philo, int num_of_philo, int argc)
 		{
 			if (times_eaten(philo, num_of_philo))
 				break ;
-			if (is_dead == DEAD_TRIGGER)
-				break ;
 		}
+		if (is_dead == DEAD_TRIGGER)
+			break ;
 	}
 	return (true);
 }
@@ -76,8 +95,8 @@ int	main(int argc, char **argv)
 			return (free(philo), 0);
 		if (!monitorize_threads(philo, num_of_philo, argc))
 			return (free(philo), 0);
-		destroy_mutexes(philo, num_of_philo, 0);
-		free(philo);
+		//destroy_mutexes(philo, num_of_philo, 0);
+		//free(philo);
 	}
 	return (0);
 }

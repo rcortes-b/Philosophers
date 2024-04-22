@@ -14,5 +14,15 @@
 
 void	*phil_routine(void *arg)
 {
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	if (philo->philo_id % 2 != 0)
+		printf("Philo id is: %d\n", philo->philo_id);
+	else
+	{
+		*philo->is_dead = DEAD_TRIGGER;
+		printf("si o q\n");
+	}
 	return (arg);
 }

@@ -48,23 +48,6 @@ static bool	init_mutex(t_philo *philo, int num_of_philo)
 	return (true);
 }
 
-static bool	init_threads(t_philo *philo, int num_of_philos)
-{
-	int	i;
-
-	i = -1;
-	while (++i < num_of_philos)
-	{
-		if (pthread_create(&philo[i].thrd, NULL, &phil_routine, &philo[i]) != 0)
-		{
-			i = -1;
-			destroy_mutexes(philo, num_of_philos, 0);
-			return (false);
-		}
-	}
-	return (true);
-}
-
 bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo)
 {
 	t_parse	data;
@@ -82,8 +65,6 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo)
 		philo[i].num_times_to_eat = data.num_times_to_eat;
 	}
 	if (!init_mutex(philo, num_of_philo))
-		return (free(philo), false);
-	if (!init_threads(philo, num_of_philo))
 		return (free(philo), false);
 	return (true);
 }
