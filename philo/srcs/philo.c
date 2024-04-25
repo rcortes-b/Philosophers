@@ -68,10 +68,17 @@ static bool	monitorize_threads(t_philo *philo, int num_of_philo, int argc)
 		if (argc == 6)
 		{
 			if (times_eaten(philo, num_of_philo))
+			{
+				destroy_mutexes(philo, num_of_philo, 0);
 				break ;
+			}
 		}
 		if (is_dead == DEAD_TRIGGER)
+		{
+			destroy_mutexes(philo, num_of_philo, 0);
+			printf("died\n");
 			break ;
+		}
 	}
 	return (true);
 }
