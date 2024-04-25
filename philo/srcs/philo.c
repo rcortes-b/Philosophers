@@ -12,7 +12,7 @@
 
 #include "../includes/philo.h"
 
-static bool	times_eaten(t_philo *philo, int num_of_philo)
+bool	times_eaten(t_philo *philo, int num_of_philo)
 {
 	int	i;
 	int	counter;
@@ -22,7 +22,11 @@ static bool	times_eaten(t_philo *philo, int num_of_philo)
 	while (++i < num_of_philo)
 	{
 		if (philo[i].num_times_to_eat != philo[i].times_eaten)
+		{
+			
+			printf("Id num times to eat: %d\n", philo[i].philo_id);
 			return (false);
+		}
 		counter++;
 	}
 	printf("Every philo has eaten at least %d times!\n", philo[0].num_times_to_eat);

@@ -57,6 +57,8 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo)
 	parse_args(&data, argc, argv);
 	while (++i < num_of_philo)
 	{
+		philo[i].start = 0;
+		philo[i].num_of_philos = num_of_philo;
 		philo[i].philo_id = i + 1;
 		philo[i].times_eaten = 0;
 		philo[i].time_to_die = data.time_to_die;

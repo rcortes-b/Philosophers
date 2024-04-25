@@ -24,6 +24,7 @@
 
 typedef struct s_philo
 {
+	int				num_of_philos;
 	int				philo_id;
 	int				time_to_die;
 	int				time_to_eat;
@@ -35,7 +36,8 @@ typedef struct s_philo
 	pthread_mutex_t	die_mutex;
 	pthread_mutex_t	eat_mutex;
 	pthread_mutex_t	sleep_mutex;
-	struct timeval	tv_start;
+	int				start;
+	int				end;
 	struct timeval	tv_end;
 	int				*is_dead;
 	int				times_eaten;
@@ -48,6 +50,8 @@ typedef struct s_parse
 	int	time_to_sleep;
 	int	num_times_to_eat;
 }	t_parse;
+
+bool	times_eaten(t_philo *philo, int num_of_philo);
 
 //Errors && Checkers
 void	invalid_input(int error_code);
@@ -62,5 +66,6 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo);
 void	*phil_routine(void *arg);
 
 void 	ft_usleep(int ms);
+int		get_time(void);
 
 #endif
