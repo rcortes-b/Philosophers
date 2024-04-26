@@ -63,25 +63,14 @@ void	invalid_input(int error_code)
 	write(2, "<(optional)number_of_times_each_philosopher_must_eat(optional)>\n", 64);
 }
 
-void	destroy_mutexes(t_philo *philo, int index, int trigger)
+void	destroy_mutexes(t_philo *philo, int index)
 {
 	int	i;
 
 	i = -1;
+	pthread_mutex_destroy(philo[0].die_mutex);
+	pthread_mutex_destroy(philo[0].eat_mutex);
+	pthread_mutex_destroy(philo[0].sleep_mutex);
 	while (++i < index)
-	{
-		pthread_mutex_destroy(&philo[i].die_mutex);
-		pthread_mutex_destroy(&philo[i].eat_mutex);
-		pthread_mutex_destroy(&philo[i].sleep_mutex);
 		pthread_mutex_destroy(&philo[i].left_fork);
-	}
-	if (trigger > 0)
-	{
-		pthread_mutex_destroy(&philo[i].left_fork);
-		pthread_mutex_destroy(&philo[i].die_mutex);
-	}
-	if (trigger > 1)
-		pthread_mutex_destroy(&philo[i].eat_mutex);
-	if (trigger > 2)
-		pthread_mutex_destroy(&philo[i].sleep_mutex);
 }

@@ -12,27 +12,6 @@
 
 #include "../includes/philo.h"
 
-bool	times_eaten(t_philo *philo, int num_of_philo)
-{
-	int	i;
-	int	counter;
-
-	counter = 0;
-	i = -1;
-	while (++i < num_of_philo)
-	{
-		if (philo[i].num_times_to_eat != philo[i].times_eaten)
-		{
-			
-			printf("Id num times to eat: %d\n", philo[i].philo_id);
-			return (false);
-		}
-		counter++;
-	}
-	printf("Every philo has eaten at least %d times!\n", philo[0].num_times_to_eat);
-	return (true);
-}
-
 static bool	init_threads(t_philo *philo, int num_of_philos)
 {
 	int	i;
@@ -42,10 +21,44 @@ static bool	init_threads(t_philo *philo, int num_of_philos)
 	{
 		if (pthread_create(&philo[i].thrd, NULL, &phil_routine, &philo[i]) != 0)
 		{
-			i = -1;
-			destroy_mutexes(philo, num_of_philos, 0);
+			destroy_mutexes(philo, num_of_philos);
 			return (false);
 		}
+	}
+	return (true);
+}
+
+static bool	times_eaten(t_philo *philo, int num_of_philo)
+{
+	int	i;
+	int	counter;
+
+	counter = 0;
+	i = -1;
+	pthread_mutex_lock(philo[0].eat_mutex);
+	while (++i < num_of_philo)
+	{
+		if (philo[i].num_times_to_eat > philo[i].times_eaten)
+			return (false);
+		counter++;
+	}
+	*philo[0].everyone_ate = EATEN_TRIGGER;
+	pthread_mutex_unlock(philo[0].eat_mutex);
+	printf("Every philo has eaten at least %d times!\n", philo[0].num_times_to_eat);
+	return (true);
+}
+
+static bool	check_to_finish(t_philo *philo, int num_of_philo, int argc)
+{
+	while (1)
+	{
+		if (argc == 6)
+		{
+			if (times_eaten(philo, num_of_philo))
+				break ;
+		}
+		if (*philo[0].is_dead == DEAD_TRIGGER)
+			break ;
 	}
 	return (true);
 }
@@ -54,35 +67,26 @@ static bool	monitorize_threads(t_philo *philo, int num_of_philo, int argc)
 {
 	int	i;
 	int	is_dead;
+	int	has_eaten;
 
 	is_dead = 0;
+	has_eaten = 0;
 	i = -1;
 	while (++i < num_of_philo)
 		philo[i].is_dead = &is_dead;
+	i = -1;
+	while (++i < num_of_philo)
+		philo[i].everyone_ate = &has_eaten;
 	if (!init_threads(philo, num_of_philo))
 		return (false);
+	if (check_to_finish(philo, num_of_philo, argc))
+		return (true);
+	destroy_mutexes(philo, num_of_philo);
 	i = -1;
 	while (++i < num_of_philo)
 	{
 		if (pthread_join(philo[i].thrd, NULL) != 0)
-			return (destroy_mutexes(philo, num_of_philo, 0), false);
-	}
-	while (1)
-	{
-		if (argc == 6)
-		{
-			if (times_eaten(philo, num_of_philo))
-			{
-				destroy_mutexes(philo, num_of_philo, 0);
-				break ;
-			}
-		}
-		if (is_dead == DEAD_TRIGGER)
-		{
-			destroy_mutexes(philo, num_of_philo, 0);
-			printf("died\n");
-			break ;
-		}
+			return (destroy_mutexes(philo, num_of_philo), false);
 	}
 	return (true);
 }
@@ -93,21 +97,20 @@ int	main(int argc, char **argv)
 	int		num_of_philo;
 
 	if (argc < 5 || argc > 6)
-		invalid_input(1);
+		return (invalid_input(1), 1);
 	else if (!check_input(argv))
-		invalid_input(2);
+		return (invalid_input(2), 1);
 	else
 	{
 		num_of_philo = ft_atoi(argv[1]);
 		philo = (t_philo *)malloc(sizeof(t_philo) * num_of_philo);
 		if (!philo)
-			return (0);
+			return (1);
 		if (!init_philo(philo, argc, &argv[2], num_of_philo))
-			return (free(philo), 0);
+			return (free(philo), 1);
 		if (!monitorize_threads(philo, num_of_philo, argc))
-			return (free(philo), 0);
-		//destroy_mutexes(philo, num_of_philo, 0);
-		//free(philo);
+			return (free(philo), 1);
+		free(philo);
 	}
 	return (0);
 }

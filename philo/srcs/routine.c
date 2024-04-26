@@ -18,26 +18,27 @@ static void check_death(t_philo *philo)
 {
 	if (philo->start > get_time())
 	{
-		pthread_mutex_lock(&philo->sleep_mutex);
+		pthread_mutex_lock(philo->sleep_mutex);
 		printf("Bro number %d really died of starve :(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n", philo->philo_id);
-		pthread_mutex_unlock(&philo->sleep_mutex);
 		*philo->is_dead = DEAD_TRIGGER;
+		pthread_mutex_unlock(philo->sleep_mutex);
 	}
 }
 
 static void	sleep_msg(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->sleep_mutex);
+	pthread_mutex_lock(philo->sleep_mutex);
 	printf("Bro number %d is sleepin'\n", philo->philo_id);
-	pthread_mutex_unlock(&philo->sleep_mutex);
+	pthread_mutex_unlock(philo->sleep_mutex);
 	ft_usleep(philo->time_to_sleep);
 }
 
 static void	eat_msg(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->eat_mutex);
+	pthread_mutex_lock(philo->eat_mutex);
 	printf("Bro number %d is eatin'\n", philo->philo_id);
-	pthread_mutex_unlock(&philo->eat_mutex);
+	philo->times_eaten++;
+	pthread_mutex_unlock(philo->eat_mutex);
 	ft_usleep(philo->time_to_eat);
 }
 
@@ -47,22 +48,21 @@ void	*phil_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	philo->start = 0;
 	if (philo->philo_id % 2 != 0)
 		ft_usleep(50);
-	while (*philo->is_dead == 0 && !times_eaten(philo, philo->num_of_philos))
+	while (*philo->is_dead == 0 && *philo->everyone_ate == 0)
 	{
+		check_death(philo);
 		pthread_mutex_lock(&philo->left_fork);
 		pthread_mutex_lock(philo->right_fork);
-		check_death(philo);
-		//printf("pre eat philo %d\n", philo->philo_id);
 		eat_msg(philo);
-		philo->times_eaten++;
 		pthread_mutex_unlock(&philo->left_fork);
 		pthread_mutex_unlock(philo->right_fork);
 		philo->start = 0;
 		sleep_msg(philo);
 		printf("Philo %d is thinkin'\n", philo->philo_id);
-		//break ;
 	}
+	printf("philo id finished: %d\n", philo->philo_id);
 	return (arg);
 }

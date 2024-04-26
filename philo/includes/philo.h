@@ -20,7 +20,8 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-#define DEAD_TRIGGER 1
+# define DEAD_TRIGGER 1
+# define EATEN_TRIGGER 1
 
 typedef struct s_philo
 {
@@ -33,14 +34,15 @@ typedef struct s_philo
 	pthread_t		thrd;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	die_mutex;
-	pthread_mutex_t	eat_mutex;
-	pthread_mutex_t	sleep_mutex;
+	pthread_mutex_t	*die_mutex;
+	pthread_mutex_t	*eat_mutex;
+	pthread_mutex_t	*sleep_mutex;
 	int				start;
 	int				end;
 	struct timeval	tv_end;
 	int				*is_dead;
 	int				times_eaten;
+	int				*everyone_ate;
 }	t_philo;
 
 typedef struct s_parse
@@ -51,12 +53,10 @@ typedef struct s_parse
 	int	num_times_to_eat;
 }	t_parse;
 
-bool	times_eaten(t_philo *philo, int num_of_philo);
-
 //Errors && Checkers
 void	invalid_input(int error_code);
 bool	check_input(char **argv);
-void	destroy_mutexes(t_philo *philo, int index, int trigger);
+void	destroy_mutexes(t_philo *philo, int index);
 
 //Parser Utils
 int		ft_atoi(char *str);
