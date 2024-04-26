@@ -65,7 +65,7 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo);
 //Philo Routine
 void	*phil_routine(void *arg);
 
-void 	ft_usleep(int ms);
+void	ft_usleep(int ms);
 int		get_time(void);
 
 #endif
