@@ -37,13 +37,19 @@ bool	check_input(char **argv)
 {
 	int	i;
 	int	j;
+	int	plus_counter;
 
 	i = 0;
 	while (argv[++i])
 	{
 		j = -1;
+		plus_counter = 0;
 		while (argv[i][++j])
 		{
+			if (argv[i][j] == '+')
+				plus_counter++;
+			if (plus_counter > 1)
+				return (false);
 			if (argv[i][j] != '+' && (argv[i][j] < '0' || argv[i][j] > '9'))
 				return (false);
 		}
