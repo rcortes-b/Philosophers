@@ -1,7 +1,7 @@
 NAME = philo
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror# -fsanitize=address
+FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
 SRCS = srcs/philo.c srcs/parse.c srcs/utils.c srcs/routine.c srcs/routine_utils.c
