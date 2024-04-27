@@ -17,12 +17,25 @@ static bool	init_threads(t_philo *philo, int num_of_philos)
 	int	i;
 
 	i = -1;
-	while (++i < num_of_philos)
+	if (num_of_philos == 1)
 	{
-		if (pthread_create(&philo[i].thrd, NULL, &phil_routine, &philo[i]) != 0)
+		if (pthread_create(&philo[0].thrd, NULL,
+				&one_phil_routine, &philo[0]) != 0)
 		{
 			destroy_mutexes(philo, num_of_philos);
 			return (false);
+		}
+	}
+	else
+	{
+		while (++i < num_of_philos)
+		{
+			if (pthread_create(&philo[i].thrd, NULL,
+					&phil_routine, &philo[i]) != 0)
+			{
+				destroy_mutexes(philo, num_of_philos);
+				return (false);
+			}
 		}
 	}
 	return (true);
@@ -44,7 +57,8 @@ static bool	times_eaten(t_philo *philo, int num_of_philo)
 	}
 	*philo[0].everyone_ate = EATEN_TRIGGER;
 	pthread_mutex_unlock(philo[0].eat_mutex);
-	printf("Every philo has eaten at least %d times!\n", philo[0].num_times_to_eat);
+	printf("Every Philo ");
+	printf("has eaten at least %d times!\n", philo[0].num_times_to_eat);
 	return (true);
 }
 

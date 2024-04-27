@@ -14,7 +14,6 @@
 
 static void	parse_args(t_parse *data, int argc, char **argv)
 {
-
 	data->time_to_die = ft_atoi(argv[0]);
 	data->time_to_eat = ft_atoi(argv[1]);
 	data->time_to_sleep = ft_atoi(argv[2]);
@@ -71,7 +70,7 @@ static bool	init_mutex(t_philo *philo, int num_of_philo)
 bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo)
 {
 	t_parse	data;
-	int	i;
+	int		i;
 
 	i = -1;
 	parse_args(&data, argc, argv);

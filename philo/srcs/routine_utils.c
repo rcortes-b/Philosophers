@@ -12,20 +12,20 @@
 
 #include "../includes/philo.h"
 
-int get_time(void)
+int	get_time(void)
 {
-    struct timeval  tv;
+	struct timeval	tv;
 
-    if (gettimeofday(&tv, NULL) == -1)
-        return (write(2, "gettimeofday error\n", 19), 0);
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	if (gettimeofday(&tv, NULL) == -1)
+		return (write(2, "gettimeofday error\n", 19), 0);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void ft_usleep(int ms)
+void	ft_usleep(int ms)
 {
-    int             start;
+	int	start;
 
-    start = get_time();
-    while (get_time() - start < ms)
-        usleep(500);
+	start = get_time();
+	while (get_time() - start < ms)
+		usleep(500);
 }

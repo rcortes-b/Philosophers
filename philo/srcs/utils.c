@@ -58,9 +58,11 @@ void	invalid_input(int error_code)
 		write(2, "Invalid number of arguments\n", 28);
 	else if (error_code == 2)
 		write(2, "Invalid input. It contains more than just numbers\n", 50);
-	write(2, "./pipex <number_of_philosophers> <time_to_die> <time_to_eat> ", 61);
+	write(2, "./philo <number_of_philosophers>", 32);
+	write(2, " <time_to_die> <time_to_eat> ", 29);
 	write(2, "<time_to_sleep> ", 16);
-	write(2, "<(optional)number_of_times_each_philosopher_must_eat(optional)>\n", 64);
+	write(2, "<(optional)number_of_times_each", 31);
+	write(2, "_philosopher_must_eat(optional)>\n", 33);
 }
 
 void	destroy_mutexes(t_philo *philo, int index)

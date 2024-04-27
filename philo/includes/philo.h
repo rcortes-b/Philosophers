@@ -38,8 +38,6 @@ typedef struct s_philo
 	pthread_mutex_t	*eat_mutex;
 	pthread_mutex_t	*sleep_mutex;
 	int				start;
-	int				end;
-	struct timeval	tv_end;
 	int				*is_dead;
 	int				times_eaten;
 	int				*everyone_ate;
@@ -64,7 +62,9 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo);
 
 //Philo Routine
 void	*phil_routine(void *arg);
+void	*one_phil_routine(void *arg);
 
+//Philo Routine Utils
 void	ft_usleep(int ms);
 int		get_time(void);
 
