@@ -41,39 +41,34 @@ static bool	init_threads(t_philo *philo, int num_of_philos)
 	return (true);
 }
 
-static bool	times_eaten(t_philo *philo, int num_of_philo)
+static bool	times_eaten(t_philo *philo, int num_of_philo, int argc)
 {
 	int	i;
-	int	counter;
 
-	counter = 0;
-	i = -1;
+	if (argc == 5)
+		return (false);
 	pthread_mutex_lock(philo[0].eat_mutex);
+	i = -1;
 	while (++i < num_of_philo)
 	{
 		if (philo[i].num_times_to_eat > philo[i].times_eaten)
 			return (false);
-		counter++;
 	}
 	*philo[0].everyone_ate = EATEN_TRIGGER;
+	pthread_mutex_lock(philo[0].print_mutex);
+	printf("%d - \033[1;30mEvery Philo ", get_time() - philo->start_time);
+	printf("has eaten at least %d times!\033[0m\n", philo[0].num_times_to_eat);
+	pthread_mutex_unlock(philo[0].print_mutex);
 	pthread_mutex_unlock(philo[0].eat_mutex);
-	printf("Every Philo ");
-	printf("has eaten at least %d times!\n", philo[0].num_times_to_eat);
 	return (true);
 }
 
 static bool	check_to_finish(t_philo *philo, int num_of_philo, int argc)
 {
-	while (1)
-	{
-		if (argc == 6)
-		{
-			if (times_eaten(philo, num_of_philo))
-				break ;
-		}
-		if (*philo[0].is_dead == DEAD_TRIGGER)
-			break ;
-	}
+	while (*philo[0].is_dead != DEAD_TRIGGER
+		&& !times_eaten(philo, num_of_philo, argc))
+		;
+	destroy_mutexes(philo, num_of_philo);
 	return (true);
 }
 
@@ -93,15 +88,14 @@ static bool	monitorize_threads(t_philo *philo, int num_of_philo, int argc)
 		philo[i].everyone_ate = &has_eaten;
 	if (!init_threads(philo, num_of_philo))
 		return (false);
-	if (check_to_finish(philo, num_of_philo, argc))
-		return (true);
-	destroy_mutexes(philo, num_of_philo);
 	i = -1;
 	while (++i < num_of_philo)
 	{
-		if (pthread_join(philo[i].thrd, NULL) != 0)
+		if (pthread_detach(philo[i].thrd) != 0)
 			return (destroy_mutexes(philo, num_of_philo), false);
 	}
+	if (check_to_finish(philo, num_of_philo, argc))
+		return (true);
 	return (true);
 }
 
@@ -124,6 +118,7 @@ int	main(int argc, char **argv)
 			return (free(philo), 1);
 		if (!monitorize_threads(philo, num_of_philo, argc))
 			return (free(philo), 1);
+		destroy_mutexes(philo, num_of_philo);
 		free(philo);
 	}
 	return (0);

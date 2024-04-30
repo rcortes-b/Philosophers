@@ -23,6 +23,14 @@
 # define DEAD_TRIGGER 1
 # define EATEN_TRIGGER 1
 
+enum e_message
+{
+	L_FORK,
+	R_FORK,
+	THINK,
+	DIED
+};
+
 typedef struct s_philo
 {
 	int				num_of_philos;
@@ -34,13 +42,17 @@ typedef struct s_philo
 	pthread_t		thrd;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*die_mutex;
+	pthread_mutex_t	*print_mutex;
 	pthread_mutex_t	*eat_mutex;
 	pthread_mutex_t	*sleep_mutex;
+	pthread_mutex_t	eat;
+	pthread_mutex_t	print;
+	pthread_mutex_t	sleep;
 	int				start;
 	int				*is_dead;
 	int				times_eaten;
 	int				*everyone_ate;
+	int				start_time;
 }	t_philo;
 
 typedef struct s_parse
@@ -63,6 +75,7 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo);
 //Philo Routine
 void	*phil_routine(void *arg);
 void	*one_phil_routine(void *arg);
+void	print_msg(t_philo *philo, int option);
 
 //Philo Routine Utils
 void	ft_usleep(int ms);

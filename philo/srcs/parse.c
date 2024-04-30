@@ -25,26 +25,23 @@ static void	parse_args(t_parse *data, int argc, char **argv)
 
 static bool	init_routines_mutex(t_philo *philo, int num_of_philos)
 {
-	pthread_mutex_t	eat;
-	pthread_mutex_t	die;
-	pthread_mutex_t	sleep;
-	int				i;
+	int	i;
 
-	if (pthread_mutex_init(&die, NULL) != 0)
+	if (pthread_mutex_init(&philo->eat, NULL) != 0)
 		return (false);
-	if (pthread_mutex_init(&eat, NULL) != 0)
-		return (pthread_mutex_destroy(&die), false);
-	if (pthread_mutex_init(&sleep, NULL) != 0)
+	if (pthread_mutex_init(&philo->print, NULL) != 0)
+		return (pthread_mutex_destroy(&philo->eat), false);
+	if (pthread_mutex_init(&philo->sleep, NULL) != 0)
 	{
-		pthread_mutex_destroy(&eat);
-		return (pthread_mutex_destroy(&die), false);
+		pthread_mutex_destroy(&philo->eat);
+		return (pthread_mutex_destroy(&philo->print), false);
 	}
 	i = -1;
 	while (++i < num_of_philos)
 	{
-		philo[i].eat_mutex = &eat;
-		philo[i].die_mutex = &die;
-		philo[i].sleep_mutex = &sleep;
+		philo[i].eat_mutex = &philo->eat;
+		philo[i].print_mutex = &philo->print;
+		philo[i].sleep_mutex = &philo->sleep;
 	}
 	return (true);
 }
@@ -78,6 +75,7 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo)
 		return (free(philo), false);
 	if (!init_mutex(philo, num_of_philo))
 		return (free(philo), false);
+	philo[0].start_time = get_time();
 	while (++i < num_of_philo)
 	{
 		philo[i].num_of_philos = num_of_philo;
@@ -87,6 +85,7 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo)
 		philo[i].time_to_eat = data.time_to_eat;
 		philo[i].time_to_sleep = data.time_to_sleep;
 		philo[i].num_times_to_eat = data.num_times_to_eat;
+		philo[i].start_time = philo[0].start_time;
 	}
 	return (true);
 }

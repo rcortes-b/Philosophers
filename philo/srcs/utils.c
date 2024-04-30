@@ -76,9 +76,9 @@ void	destroy_mutexes(t_philo *philo, int index)
 	int	i;
 
 	i = -1;
-	pthread_mutex_destroy(philo[0].die_mutex);
-	pthread_mutex_destroy(philo[0].eat_mutex);
-	pthread_mutex_destroy(philo[0].sleep_mutex);
+	pthread_mutex_destroy(&philo[0].print);
+	pthread_mutex_destroy(&philo[0].eat);
+	pthread_mutex_destroy(&philo[0].sleep);
 	while (++i < index)
 		pthread_mutex_destroy(&philo[i].left_fork);
 }
