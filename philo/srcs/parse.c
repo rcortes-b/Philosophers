@@ -32,7 +32,11 @@ static bool	init_routines_mutex(t_philo *philo, int num_of_philos)
 	if (pthread_mutex_init(&philo->print, NULL) != 0)
 		return (pthread_mutex_destroy(&philo->eat), false);
 	if (pthread_mutex_init(&philo->sleep, NULL) != 0)
+		return (pthread_mutex_destroy(&philo->print),
+			pthread_mutex_destroy(&philo->eat), false);
+	if (pthread_mutex_init(&philo->dead, NULL) != 0)
 	{
+		pthread_mutex_destroy(&philo->sleep);
 		pthread_mutex_destroy(&philo->eat);
 		return (pthread_mutex_destroy(&philo->print), false);
 	}
@@ -42,6 +46,7 @@ static bool	init_routines_mutex(t_philo *philo, int num_of_philos)
 		philo[i].eat_mutex = &philo->eat;
 		philo[i].print_mutex = &philo->print;
 		philo[i].sleep_mutex = &philo->sleep;
+		philo[i].died_mutex = &philo->dead;
 	}
 	return (true);
 }

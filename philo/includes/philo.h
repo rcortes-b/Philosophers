@@ -42,12 +42,14 @@ typedef struct s_philo
 	pthread_t		thrd;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*print_mutex;
 	pthread_mutex_t	*eat_mutex;
 	pthread_mutex_t	*sleep_mutex;
+	pthread_mutex_t	*print_mutex;
+	pthread_mutex_t	*died_mutex;
 	pthread_mutex_t	eat;
-	pthread_mutex_t	print;
 	pthread_mutex_t	sleep;
+	pthread_mutex_t	print;
+	pthread_mutex_t	dead;
 	int				start;
 	int				*is_dead;
 	int				times_eaten;
@@ -70,14 +72,22 @@ void	destroy_mutexes(t_philo *philo, int index);
 
 //Parser Utils
 int		ft_atoi(char *str);
+void	ft_putnbr(int nb);
+void	ft_putchar(char c);
 bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo);
 
 //Philo Routine
 void	*phil_routine(void *arg);
 void	*one_phil_routine(void *arg);
-void	print_msg(t_philo *philo, int option);
 
 //Philo Routine Utils
+void	fork_msg(t_philo philo, int option);
+void	eat_msg(t_philo philo);
+void	sleep_msg(t_philo philo);
+void	think_philo(t_philo philo);
+void	dead_msg(t_philo philo);
+void	has_eaten_msg(t_philo philo);
+
 void	ft_usleep(int ms);
 int		get_time(void);
 

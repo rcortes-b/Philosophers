@@ -1,10 +1,11 @@
 NAME = philo
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror #-fsanitize=thread
 RM = rm -rf
 
-SRCS = srcs/philo.c srcs/parse.c srcs/utils.c srcs/routine.c srcs/routine_utils.c
+SRCS = srcs/philo.c srcs/parse.c srcs/utils.c srcs/routine.c \
+		srcs/routine_utils.c srcs/print.c
 
 OBJS = $(SRCS:.c=.o)
 

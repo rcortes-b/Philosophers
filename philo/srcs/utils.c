@@ -12,6 +12,36 @@
 
 #include "../includes/philo.h"
 
+void	ft_putchar(char c)
+{
+	write(1, &c, 1);
+}
+
+void	ft_putnbr(int nb)
+{
+	if (nb == -2147483648)
+	{
+		ft_putchar('-');
+		ft_putchar('2');
+		nb = 147483648;
+	}
+	if (nb < 0)
+	{
+		ft_putchar('-');
+		nb *= -1;
+	}
+	if (nb >= 10)
+	{
+		ft_putnbr(nb / 10);
+		ft_putnbr(nb % 10);
+	}
+	else
+	{
+		ft_putchar(nb + 48);
+	}
+}
+
+
 int	ft_atoi(char *str)
 {
 	int	i;
@@ -69,16 +99,4 @@ void	invalid_input(int error_code)
 	write(2, "<time_to_sleep> ", 16);
 	write(2, "<(optional)number_of_times_each", 31);
 	write(2, "_philosopher_must_eat(optional)>\n", 33);
-}
-
-void	destroy_mutexes(t_philo *philo, int index)
-{
-	int	i;
-
-	i = -1;
-	pthread_mutex_destroy(&philo[0].print);
-	pthread_mutex_destroy(&philo[0].eat);
-	pthread_mutex_destroy(&philo[0].sleep);
-	while (++i < index)
-		pthread_mutex_destroy(&philo[i].left_fork);
 }
