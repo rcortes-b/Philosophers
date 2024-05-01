@@ -19,7 +19,7 @@ void	destroy_mutexes(t_philo *philo, int index)
 	i = -1;
 	pthread_mutex_destroy(&philo[0].print);
 	pthread_mutex_destroy(&philo[0].eat);
-	pthread_mutex_destroy(&philo[0].sleep);
+	pthread_mutex_destroy(&philo[0].dead);
 	while (++i < index)
 		pthread_mutex_destroy(&philo[i].left_fork);
 }
@@ -50,4 +50,11 @@ void	ft_usleep(int ms)
 	start = get_time();
 	while (get_time() - start < ms)
 		usleep(500);
+}
+
+bool	keep_dinner(t_philo philo)
+{
+	if (*philo.is_dead == 1 || *philo.everyone_ate == 1)
+		return (false);
+	return (true);
 }

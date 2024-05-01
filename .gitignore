@@ -1,7 +1,0 @@
-.DS_Store
-philo/.vscode
-philo/philo
-philo/srcs/*.o
-a.out
-main.c
-#notes.md

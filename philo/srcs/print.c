@@ -14,6 +14,8 @@
 
 void	think_philo(t_philo philo)
 {
+	if (!keep_dinner(philo))
+		return ;
 	pthread_mutex_lock(philo.print_mutex);
 	ft_putnbr(get_time() - philo.start_time);
 	write(1, " - Philo ", 9);
@@ -24,16 +26,20 @@ void	think_philo(t_philo philo)
 
 void	sleep_msg(t_philo philo)
 {
+	if (!keep_dinner(philo))
+		return ;
 	pthread_mutex_lock(philo.print_mutex);
 	ft_putnbr(get_time() - philo.start_time);
 	write(1, " - Philo ", 9);
 	ft_putnbr(philo.philo_id);
 	write(1, " is \033[1;31msleeping\033[0m\n", 25);
-	pthread_mutex_unlock(philo.print_mutex);	
+	pthread_mutex_unlock(philo.print_mutex);
 }
 
 void	fork_msg(t_philo philo, int option)
 {
+	if (!keep_dinner(philo))
+		return ;
 	pthread_mutex_lock(philo.print_mutex);
 	ft_putnbr(get_time() - philo.start_time);
 	write(1, " - Philo ", 9);
@@ -42,17 +48,19 @@ void	fork_msg(t_philo philo, int option)
 		write(1, " has taken his \033[1;35mleft fork\033[0m\n", 37);
 	else
 		write(1, " has taken his \033[1;35mright fork\033[0m\n", 38);
-	pthread_mutex_unlock(philo.print_mutex);	
+	pthread_mutex_unlock(philo.print_mutex);
 }
 
 void	eat_msg(t_philo philo)
 {
+	if (!keep_dinner(philo))
+		return ;
 	pthread_mutex_lock(philo.print_mutex);
 	ft_putnbr(get_time() - philo.start_time);
 	write(1, " - Philo ", 9);
 	ft_putnbr(philo.philo_id);
 	write(1, " is \033[1;32meating\033[0m\n", 23);
-	pthread_mutex_unlock(philo.print_mutex);		
+	pthread_mutex_unlock(philo.print_mutex);
 }
 
 void	dead_msg(t_philo philo)
@@ -62,6 +70,5 @@ void	dead_msg(t_philo philo)
 	write(1, " - \033[1;30mPhilo ", 16);
 	ft_putnbr(philo.philo_id);
 	write(1, " died of starve\033[0m\n", 21);
-	pthread_mutex_unlock(philo.print_mutex);		
+	pthread_mutex_unlock(philo.print_mutex);
 }
-

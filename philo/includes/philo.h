@@ -43,11 +43,9 @@ typedef struct s_philo
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*eat_mutex;
-	pthread_mutex_t	*sleep_mutex;
 	pthread_mutex_t	*print_mutex;
 	pthread_mutex_t	*died_mutex;
 	pthread_mutex_t	eat;
-	pthread_mutex_t	sleep;
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead;
 	int				start;
@@ -55,6 +53,7 @@ typedef struct s_philo
 	int				times_eaten;
 	int				*everyone_ate;
 	int				start_time;
+	int				eating;
 }	t_philo;
 
 typedef struct s_parse
@@ -69,6 +68,7 @@ typedef struct s_parse
 void	invalid_input(int error_code);
 bool	check_input(char **argv);
 void	destroy_mutexes(t_philo *philo, int index);
+bool	keep_dinner(t_philo philo);
 
 //Parser Utils
 int		ft_atoi(char *str);

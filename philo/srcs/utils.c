@@ -41,7 +41,6 @@ void	ft_putnbr(int nb)
 	}
 }
 
-
 int	ft_atoi(char *str)
 {
 	int	i;
@@ -61,7 +60,7 @@ int	ft_atoi(char *str)
 	return (num);
 }
 
-/* Checker && Error file */
+//Checks if the input is valid
 
 bool	check_input(char **argv)
 {
@@ -86,6 +85,8 @@ bool	check_input(char **argv)
 	}
 	return (true);
 }
+
+//Throws the error message if the it's an invalid input
 
 void	invalid_input(int error_code)
 {

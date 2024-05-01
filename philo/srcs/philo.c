@@ -59,17 +59,35 @@ static bool	times_eaten(t_philo *philo, int num_of_philo, int argc)
 	}
 	*philo[0].everyone_ate = EATEN_TRIGGER;
 	has_eaten_msg(*philo);
+	ft_usleep(5);
 	pthread_mutex_unlock(philo[0].eat_mutex);
 	return (true);
 }
 
 static bool	check_to_finish(t_philo *philo, int num_of_philo, int argc)
 {
+	int	i;
+
+	i = 0;
 	while (1)
 	{
+		pthread_mutex_lock(philo[0].eat_mutex);
+		i = -1;
+		while (++i < num_of_philo)
+		{
+			if (((get_time() - philo[i].start) >= philo[0].time_to_die)
+				&& philo[i].eating == 0)
+			{
+				pthread_mutex_lock(philo[0].died_mutex);
+				*philo[0].is_dead = 1;
+				pthread_mutex_unlock(philo[0].eat_mutex);
+				pthread_mutex_unlock(philo[0].died_mutex);
+				dead_msg(philo[i]);
+				return (ft_usleep(5), true);
+			}
+		}
+		pthread_mutex_unlock(philo[0].eat_mutex);
 		if (times_eaten(philo, num_of_philo, argc))
-			return (true);
-		if (*philo[0].is_dead == DEAD_TRIGGER)
 			return (true);
 	}
 	return (true);
