@@ -40,6 +40,7 @@ typedef struct s_philo
 	int				time_to_sleep;
 	int				num_times_to_eat;
 	pthread_t		thrd;
+	pthread_t		monitor;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*eat_mutex;
@@ -83,9 +84,9 @@ bool	check_death(t_philo *philo);
 
 //Philo Routine Utils
 void	fork_msg(t_philo *philo, int option);
-bool	eat_msg(t_philo *philo);
-bool	sleep_msg(t_philo *philo);
-bool	think_philo(t_philo *philo);
+void	eat_msg(t_philo *philo);
+void	sleep_msg(t_philo *philo);
+void	think_philo(t_philo *philo);
 void	dead_msg(t_philo *philo);
 void	has_eaten_msg(t_philo philo);
 

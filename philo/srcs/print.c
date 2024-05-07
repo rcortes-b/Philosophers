@@ -12,36 +12,34 @@
 
 #include "../includes/philo.h"
 
-bool	think_philo(t_philo *philo)
+void	think_philo(t_philo *philo)
 {
 	pthread_mutex_lock(philo->print_mutex);
 	if (check_death(philo))
 	{
 		pthread_mutex_unlock(philo->print_mutex);
-		return (false);
+		return ;
 	}
 	ft_putnbr(get_time() - philo->start_time);
 	write(1, " - Philo ", 9);
 	ft_putnbr(philo->philo_id);
 	write(1, " is \033[1;34mthinking\033[0m\n", 25);
 	pthread_mutex_unlock(philo->print_mutex);
-	return (true);
 }
 
-bool	sleep_msg(t_philo *philo)
+void	sleep_msg(t_philo *philo)
 {
 	pthread_mutex_lock(philo->print_mutex);
 	if (check_death(philo))
 	{
 		pthread_mutex_unlock(philo->print_mutex);
-		return (false);
+		return ;
 	}
 	ft_putnbr(get_time() - philo->start_time);
 	write(1, " - Philo ", 9);
 	ft_putnbr(philo->philo_id);
 	write(1, " is \033[1;31msleeping\033[0m\n", 25);
 	pthread_mutex_unlock(philo->print_mutex);
-	return (true);
 }
 
 void	fork_msg(t_philo *philo, int option)
@@ -62,20 +60,19 @@ void	fork_msg(t_philo *philo, int option)
 	pthread_mutex_unlock(philo->print_mutex);
 }
 
-bool	eat_msg(t_philo *philo)
+void	eat_msg(t_philo *philo)
 {
 	pthread_mutex_lock(philo->print_mutex);
 	if (check_death(philo))
 	{
 		pthread_mutex_unlock(philo->print_mutex);
-		return (false);
+		return ;
 	}
 	ft_putnbr(get_time() - philo->start_time);
 	write(1, " - Philo ", 9);
 	ft_putnbr(philo->philo_id);
 	write(1, " is \033[1;32meating\033[0m\n", 23);
 	pthread_mutex_unlock(philo->print_mutex);
-	return (true);
 }
 
 void	dead_msg(t_philo *philo)
