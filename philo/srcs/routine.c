@@ -12,9 +12,26 @@
 
 #include "../includes/philo.h"
 
-static void	eat_philo(t_philo *philo)
+bool	check_death(t_philo *philo)
 {
-	eat_msg(*philo);
+	pthread_mutex_lock(philo->died_mutex);
+	if (*philo->is_dead == 1 || *philo->everyone_ate == 1)
+	{
+		pthread_mutex_unlock(philo->died_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(philo->died_mutex);
+	return (false);
+}
+
+static bool	eat_philo(t_philo *philo)
+{
+	if (!eat_msg(philo))
+	{
+		pthread_mutex_unlock(&philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+		return (false);
+	}
 	pthread_mutex_lock(philo->eat_mutex);
 	philo->eating = 1;
 	philo->start = get_time();
@@ -22,12 +39,15 @@ static void	eat_philo(t_philo *philo)
 	pthread_mutex_unlock(philo->eat_mutex);
 	ft_usleep(philo->time_to_eat);
 	philo->eating = 0;
+	return (true);
 }
 
-static void	sleep_philo(t_philo *philo)
+static bool	sleep_philo(t_philo *philo)
 {
-	sleep_msg(*philo);
+	if (!sleep_msg(philo))
+		return (false);
 	ft_usleep(philo->time_to_sleep);
+	return (true);
 }
 
 void	*phil_routine(void *arg)
@@ -42,14 +62,17 @@ void	*phil_routine(void *arg)
 	while (*philo->is_dead == 0 && *philo->everyone_ate == 0)
 	{
 		pthread_mutex_lock(&philo->left_fork);
-		fork_msg(*philo, L_FORK);
+		fork_msg(philo, L_FORK);
 		pthread_mutex_lock(philo->right_fork);
-		fork_msg(*philo, R_FORK);
-		eat_philo(philo);
+		fork_msg(philo, R_FORK);
+		if (!eat_philo(philo))
+			return (arg);
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(&philo->left_fork);
-		sleep_philo(philo);
-		think_philo(*philo);
+		if (!sleep_philo(philo))
+			return (arg);
+		if (!think_philo(philo))
+			return (arg);
 	}
 	return (arg);
 }
@@ -63,7 +86,7 @@ void	*one_phil_routine(void *arg)
 	while (*philo->is_dead == 0)
 	{
 		pthread_mutex_lock(&philo->left_fork);
-		fork_msg(*philo, L_FORK);
+		fork_msg(philo, L_FORK);
 		ft_usleep(philo->time_to_die);
 	}
 	return (arg);

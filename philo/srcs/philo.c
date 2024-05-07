@@ -82,7 +82,7 @@ static bool	check_to_finish(t_philo *philo, int num_of_philo, int argc)
 				*philo[0].is_dead = 1;
 				pthread_mutex_unlock(philo[0].eat_mutex);
 				pthread_mutex_unlock(philo[0].died_mutex);
-				dead_msg(philo[i]);
+				dead_msg(&philo[i]);
 				return (ft_usleep(5), true);
 			}
 		}

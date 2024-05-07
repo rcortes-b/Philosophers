@@ -51,10 +51,3 @@ void	ft_usleep(int ms)
 	while (get_time() - start < ms)
 		usleep(500);
 }
-
-bool	keep_dinner(t_philo philo)
-{
-	if (*philo.is_dead == 1 || *philo.everyone_ate == 1)
-		return (false);
-	return (true);
-}

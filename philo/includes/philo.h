@@ -79,13 +79,14 @@ bool	init_philo(t_philo *philo, int argc, char **argv, int num_of_philo);
 //Philo Routine
 void	*phil_routine(void *arg);
 void	*one_phil_routine(void *arg);
+bool	check_death(t_philo *philo);
 
 //Philo Routine Utils
-void	fork_msg(t_philo philo, int option);
-void	eat_msg(t_philo philo);
-void	sleep_msg(t_philo philo);
-void	think_philo(t_philo philo);
-void	dead_msg(t_philo philo);
+void	fork_msg(t_philo *philo, int option);
+bool	eat_msg(t_philo *philo);
+bool	sleep_msg(t_philo *philo);
+bool	think_philo(t_philo *philo);
+void	dead_msg(t_philo *philo);
 void	has_eaten_msg(t_philo philo);
 
 void	ft_usleep(int ms);
