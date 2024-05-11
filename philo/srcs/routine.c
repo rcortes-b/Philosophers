@@ -55,8 +55,6 @@ void	*phil_routine(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->philo_id % 2 != 0)
 		ft_usleep(1);
-	philo->eating = 0;
-	philo->start = get_time();
 	while (!check_death(philo))
 	{
 		eat_philo(philo);
