@@ -12,9 +12,9 @@
 
 #include "../includes/philo.h"
 
-void	*check_to_finish(void *arg);
+void	check_to_finish(t_philo *philo);
 
-static bool	init_threads(t_philo *philo, pthread_t monitor, int num_of_philos)
+static bool	init_threads(t_philo *philo, int num_of_philos)
 {
 	int	i;
 
@@ -30,9 +30,6 @@ static bool	init_threads(t_philo *philo, pthread_t monitor, int num_of_philos)
 	}
 	else
 	{
-		if (pthread_create(&monitor, NULL,
-					&check_to_finish, philo) != 0)
-			return (destroy_mutexes(philo, num_of_philos), false);
 		while (++i < num_of_philos)
 		{
 			if (pthread_create(&philo[i].thrd, NULL,
@@ -63,20 +60,18 @@ static bool	times_eaten(t_philo *philo, int num_of_philo)
 		}
 		pthread_mutex_unlock(philo[0].eat_mutex);
 	}
-	has_eaten_msg(*philo);
 	pthread_mutex_lock(philo[0].died_mutex);
 	*philo[0].everyone_ate = EATEN_TRIGGER;
 	*philo[0].is_dead = DEAD_TRIGGER;
+	has_eaten_msg(*philo);
 	pthread_mutex_unlock(philo[0].died_mutex);
 	return (true);
 }
 
-void	*check_to_finish(void *arg)
+void	check_to_finish(t_philo *philo)
 {
-	t_philo	*philo;
 	int	i;
 
-	philo = (t_philo *)arg;
 	i = 0;
 	while (1)
 	{
@@ -88,26 +83,24 @@ void	*check_to_finish(void *arg)
 				&& philo[i].eating == 0)
 			{
 				pthread_mutex_unlock(philo[0].eat_mutex);
-				dead_msg(&philo[i]);
 				pthread_mutex_lock(philo[0].died_mutex);
 				*philo[0].is_dead = 1;
 				pthread_mutex_unlock(philo[0].died_mutex);
-				return (arg);
+				dead_msg(&philo[i]);
+				return ;
 			}
 			pthread_mutex_unlock(philo[0].eat_mutex);
 		}
 		if (times_eaten(philo, philo[0].num_of_philos))
-			return (arg);
+			return ;
 	}
-	return (arg);
 }
 
 static bool	monitorize_threads(t_philo *philo, int num_of_philo)
 {
-	pthread_t	monitor;
-	int			i;
-	int			is_dead;
 	int			has_eaten;
+	int			is_dead;
+	int			i;
 
 	is_dead = 0;
 	has_eaten = 0;
@@ -117,10 +110,9 @@ static bool	monitorize_threads(t_philo *philo, int num_of_philo)
 	i = -1;
 	while (++i < num_of_philo)
 		philo[i].everyone_ate = &has_eaten;
-	if (!init_threads(philo, monitor, num_of_philo))
+	if (!init_threads(philo, num_of_philo))
 		return (false);
-	if (pthread_join(monitor, NULL) != 0)
-		return (destroy_mutexes(philo, num_of_philo), false);
+	check_to_finish(philo);
 	i = -1;
 	while (++i < num_of_philo)
 	{
@@ -142,6 +134,8 @@ int	main(int argc, char **argv)
 	else
 	{
 		num_of_philo = ft_atoi(argv[1]);
+		if (num_of_philo == 0)
+			return (1);
 		philo = (t_philo *)malloc(sizeof(t_philo) * num_of_philo);
 		if (!philo)
 			return (1);
@@ -154,20 +148,3 @@ int	main(int argc, char **argv)
 	}
 	return (0);
 }
-
-/*for (int i = 0; i < num_of_philo; i++)
-	{
-		printf("philo_id: %d\n", philo[i].philo_id);
-		printf("leftfork: %p\n", &philo[i].left_fork);
-		printf("rightfork: %p\n", philo[i].right_fork);
-		printf("time2die: %d\n", philo[i].time_to_die);
-		printf("time2eat: %d\n", philo[i].time_to_eat);
-		printf("time2sleep: %d\n", philo[i].time_to_sleep);
-		if (argc == 6)
-			printf("nbtimes2eat: %d\n", philo[i].num_times_to_eat);
-		printf("\n");
-	}
-	for (int l = 0; l < num_of_philo; l++)
-		pthread_mutex_destroy(&philo[l].left_fork);
-	free(philo);
-*/

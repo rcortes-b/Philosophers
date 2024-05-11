@@ -40,7 +40,6 @@ typedef struct s_philo
 	int				time_to_sleep;
 	int				num_times_to_eat;
 	pthread_t		thrd;
-	pthread_t		monitor;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*eat_mutex;
