@@ -28,9 +28,11 @@ void	has_eaten_msg(t_philo philo)
 {
 	pthread_mutex_lock(philo.print_mutex);
 	ft_putnbr(get_time() - philo.start_time);
-	write(1, " - \033[1;30mEvery Philo has eaten at least ", 42);
+	if (write(1, " - \033[1;30mEvery Philo has eaten at least ", 42) == -1)
+		return ;
 	ft_putnbr(philo.num_times_to_eat);
-	write(1, " times!\033[0m\n", 13);
+	if (write(1, " times!\033[0m\n", 13) == -1)
+		return ;
 	pthread_mutex_unlock(philo.print_mutex);
 }
 
@@ -39,7 +41,10 @@ int	get_time(void)
 	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL) == -1)
-		return (write(2, "gettimeofday error\n", 19), 0);
+	{
+		if (write(2, "gettimeofday error\n", 19) == -1)
+			return (-1);
+	}
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 

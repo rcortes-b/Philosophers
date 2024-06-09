@@ -14,7 +14,8 @@
 
 void	ft_putchar(char c)
 {
-	write(1, &c, 1);
+	if (write(1, &c, 1) == -1)
+		return ;
 }
 
 void	ft_putnbr(int nb)
@@ -90,14 +91,26 @@ bool	check_input(char **argv)
 
 void	invalid_input(int error_code)
 {
-	write(2, "philo error: ", 13);
+	if (write(2, "philo error: ", 13) == -1)
+		return ;
 	if (error_code == 1)
-		write(2, "Invalid number of arguments\n", 28);
+	{
+		if (write(2, "Invalid number of arguments\n", 28) == -1)
+			return ;
+	}
 	else if (error_code == 2)
-		write(2, "Invalid input. It contains more than just numbers\n", 50);
-	write(2, "./philo <number_of_philosophers>", 32);
-	write(2, " <time_to_die> <time_to_eat> ", 29);
-	write(2, "<time_to_sleep> ", 16);
-	write(2, "<(optional)number_of_times_each", 31);
-	write(2, "_philosopher_must_eat(optional)>\n", 33);
+	{
+		if (write(2, "Invalid input. It contains more than just numbers\n", 50) == -1)
+			return ;
+	}
+	if (write(2, "./philo <number_of_philosophers>", 32) == -1)
+		return ;
+	if (write(2, " <time_to_die> <time_to_eat> ", 29) == -1)
+		return ;
+	if (write(2, "<time_to_sleep> ", 16) == -1)
+		return ;
+	if (write(2, "<(optional)number_of_times_each", 31) == -1)
+		return ;
+	if (write(2, "_philosopher_must_eat(optional)>\n", 33) == -1)
+		return ;
 }
