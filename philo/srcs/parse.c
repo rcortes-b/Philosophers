@@ -27,21 +27,21 @@ static bool	init_routines_mutex(t_philo *philo, int num_of_philos)
 {
 	int	i;
 
-	if (pthread_mutex_init(&philo[0].eat, NULL) != 0)
+	if (pthread_mutex_init(&philo[0].data.eat, NULL) != 0)
 		return (false);
-	if (pthread_mutex_init(&philo[0].print, NULL) != 0)
-		return (pthread_mutex_destroy(&philo->eat), false);
-	if (pthread_mutex_init(&philo[0].dead, NULL) != 0)
+	if (pthread_mutex_init(&philo[0].data.print, NULL) != 0)
+		return (pthread_mutex_destroy(&philo->data.eat), false);
+	if (pthread_mutex_init(&philo[0].data.dead, NULL) != 0)
 	{
-		pthread_mutex_destroy(&philo->eat);
-		return (pthread_mutex_destroy(&philo->print), false);
+		pthread_mutex_destroy(&philo->data.eat);
+		return (pthread_mutex_destroy(&philo->data.print), false);
 	}
 	i = -1;
 	while (++i < num_of_philos)
 	{
-		philo[i].eat_mutex = &philo[0].eat;
-		philo[i].print_mutex = &philo[0].print;
-		philo[i].died_mutex = &philo[0].dead;
+		philo[i].eat_mutex = &philo[0].data.eat;
+		philo[i].print_mutex = &philo[0].data.print;
+		philo[i].died_mutex = &philo[0].data.dead;
 	}
 	return (true);
 }

@@ -31,6 +31,13 @@ enum e_message
 	DIED
 };
 
+typedef struct s_data
+{
+	pthread_mutex_t	eat;
+	pthread_mutex_t	print;
+	pthread_mutex_t	dead;
+}	t_data;
+
 typedef struct s_philo
 {
 	int				num_of_philos;
@@ -45,16 +52,16 @@ typedef struct s_philo
 	pthread_mutex_t	*eat_mutex;
 	pthread_mutex_t	*print_mutex;
 	pthread_mutex_t	*died_mutex;
-	pthread_mutex_t	eat;
-	pthread_mutex_t	print;
-	pthread_mutex_t	dead;
 	int				start;
 	int				*is_dead;
 	int				times_eaten;
 	int				*everyone_ate;
 	int				start_time;
 	int				eating;
+	t_data			data;
 }	t_philo;
+
+
 
 typedef struct s_parse
 {
